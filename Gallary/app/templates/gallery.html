@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <title>Gallery</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />
+    <meta name="keywords" content="" />
+    <script>
+        addEventListener("load", function() {
+            setTimeout(hideURLbar, 0);
+        }, false);
+
+        function hideURLbar() {
+            window.scrollTo(0, 1);
+        }
+        var placeId = {{ placeid }}
+        function loadGallery(){
+            var route = "/images/" + placeId;
+            jQuery.ajax({
+                url: route,
+                type: "GET",
+                contentType: 'application/json; charset=utf-8',
+                success: function(data) {
+                    var array = JSON.parse(data);
+                    var length = array.length;
+                    console.log(array);
+                    for(var i = 0; i < length; i++){
+                        var image = array[i];
+                        // ADD IMAGE
+                        var grid = document.getElementById("grid");
+
+                        var colDiv = document.createElement("div");
+                        colDiv.classList.add("col-lg-4", "gal-img", "mt-lg-4");
+
+                        var galInfo = document.createElement("div");
+                        galInfo.classList.add("gal-info");
+                        galInfo.style.textAlign = "center"
+
+
+                        var galA = document.createElement("a");
+                        galA.href = "http://127.0.0.1:5002/map/" + image["id"] + "/" + image["site_name"];
+
+                        var img = document.createElement("img");
+                        img.src = image["link"];
+                        img.alt = "news image";
+                        img.classList.add("img-fluid");
+
+                        var siteName = document.createElement("h3");
+                        siteName.innerHTML = image["site_name"];
+
+                        galA.append(img);
+                        galInfo.append(galA, siteName);
+                        colDiv.append(galInfo);
+                        grid.append(colDiv);
+                    }
+                },
+                error : function() {
+                    alert("ERROR: Fail to connect RESTFUL API")
+                },
+                timeout: 120000,
+            });
+        }
+    </script>
+    <!-- //Meta tag Keywords -->
+    <!-- Custom-Files -->
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <!-- Bootstrap-Core-CSS -->
+    <link rel="stylesheet" href="../static/css/style.css" type="text/css" media="all" />
+    <!-- Style-CSS -->
+    <!-- font-awesome-icons -->
+    <link href="../static/css/font-awesome.css" rel="stylesheet">
+    <!-- //font-awesome-icons -->
+    <!-- /Fonts -->
+    <link href="http://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700,800" rel="stylesheet">
+    <!-- //Fonts -->
+</head>
+
+<body onload="loadGallery()">
+    <!-- //main-content -->
+    <!-- portfolio -->
+    <section class="portfolio-flyer py-5" id="gallery">
+        <div class="container pt-lg-3 pb-md-5">
+            <h3 class="tittle  text-center my-lg-5 my-3">Our Gallery</h3>
+            <div class="row news-grids pb-lg-5 mt-3 mt-lg-5" id="grid">
+            </div>
+        </div>
+    </section>
+    <!-- //portfolio -->
+</body>
+</html>
